@@ -1,0 +1,7 @@
+name: Commerce Shipping BoxPacker
+description: 'An implementation of dvdoug/BoxPacker for Drupal Commerce Shipping'
+type: module
+core_version_requirement: ^8.8 || ^9
+package: Commerce
+dependencies:
+  - commerce:commerce_shipping

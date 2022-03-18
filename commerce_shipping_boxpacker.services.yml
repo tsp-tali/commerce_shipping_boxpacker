@@ -1,0 +1,6 @@
+services:
+  commerce_shipping_boxpacker.packer:
+    class: Drupal\commerce_shipping_boxpacker\Packer\Packer
+    arguments: [ '@entity_type.manager']
+    tags:
+      - { name: commerce_shipping.packer, priority: 100 }

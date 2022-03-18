@@ -1,0 +1,10 @@
+{
+    "name": "drupal/commerce_shipping_boxpacker",
+    "description": "Commerce Shipping BoxPacker",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/commerce_shipping": "^2.3",
+        "dvdoug/boxpacker": "^3.9"
+    }
+}
