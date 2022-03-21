@@ -4,4 +4,4 @@ type: module
 core_version_requirement: ^8.8 || ^9
 package: Commerce
 dependencies:
-  - commerce:commerce_shipping
+  - commerce_shipping:commerce_shipping
