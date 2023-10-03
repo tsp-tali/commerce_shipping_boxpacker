@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\physical\MeasurementType;
+use Drupal\commerce_shipping\Entity\PackageType;
+
+/**
+ * Implements hook_form_alter().
+ */
+function commerce_shipping_boxpacker_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'commerce_package_type_add_form' || $form_id == 'commerce_package_type_edit_form') {
+    $form['weight']['#suffix'] = t('The weight of the package itself, with nothing in it.');
+    $form['max_weight'] = [
+      '#type' => 'physical_measurement',
+      '#title' => t('Maximum weight'),
+      '#measurement_type' => MeasurementType::WEIGHT,
+      '#suffix' => t('The maximum weight the package can hold.'),
+    ];
+    if ($package_type = $form_state->getFormObject()->getEntity()) {
+      $form['max_weight']['#default_value'] = $package_type->getThirdPartySetting('commerce_shipping_boxpacker', 'max_weight');
+    }
+    $form['#entity_builders'][] = 'commerce_shipping_boxpacker_form_package_type_edit_form_builder';
+  }
+}
+
+/**
+ * Entity builder for the package_type config entity.
+ */
+function commerce_shipping_boxpacker_form_package_type_edit_form_builder($entity_type, PackageType $package_type, array &$form, FormStateInterface $form_state) {
+  if ($form_state->getValue('max_weight')) {
+    $package_type->setThirdPartySetting('commerce_shipping_boxpacker', 'max_weight', $form_state->getValue('max_weight'));
+    return;
+  }
+  $package_type->unsetThirdPartySetting('commerce_shipping_boxpacker', 'max_weight');
+}

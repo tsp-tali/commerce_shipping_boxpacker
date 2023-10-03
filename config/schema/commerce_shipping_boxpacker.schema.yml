@@ -1,0 +1,7 @@
+commerce_shipping.commerce_package_type.*.third_party.commerce_shipping_boxpacker:
+  type: mapping
+  label: 'Maximum package weight'
+  mapping:
+    max_weight:
+      type: field.value.physical_measurement
+      label: 'Maximum weight'
