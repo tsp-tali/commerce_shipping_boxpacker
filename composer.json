@@ -4,7 +4,7 @@
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
     "require": {
-        "drupal/commerce_shipping": "^2.3",
+        "drupal/commerce_shipping": "^2.2",
         "dvdoug/boxpacker": "^3.9"
     }
 }
