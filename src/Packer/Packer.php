@@ -107,7 +107,7 @@ class Packer implements PackerInterface {
       $dimensions = $package_type->getDimensions();
       $package_weight = $package_type->getWeight();
       $max_weight = $package_type->getThirdPartySetting('commerce_shipping_boxpacker', 'max_weight');
-      if (empty($max_weight)) {
+      if (empty($max_weight) || empty($max_weight['number'])) {
         $max_weight = [
           'number' => 10000,
           'unit' => 'g',
