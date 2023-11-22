@@ -124,14 +124,14 @@ class Packer implements PackerInterface {
       $boxPacker->addBox(
         new PackerBox(
           $package_type->id(),
-          $dimensions['length'],
-          $dimensions['width'],
-          $dimensions['height'],
-          $package_weight['number'],
-          $dimensions['length'],
-          $dimensions['width'],
-          $dimensions['height'],
-          $max_weight['number']
+          (int) $dimensions['length'],
+          (int) $dimensions['width'],
+          (int) $dimensions['height'],
+          (int) $package_weight['number'],
+          (int) $dimensions['length'],
+          (int) $dimensions['width'],
+          (int) $dimensions['height'],
+          (int) $max_weight['number']
         )
       );
     }
@@ -163,10 +163,10 @@ class Packer implements PackerInterface {
       $boxPacker->addItem(
         new PackerItem(
           $item['order_item']->id(),
-          $dimensions['width'],
-          $dimensions['length'],
-          $dimensions['height'],
-          $weight['number'],
+          (int) $dimensions['width'],
+          (int) $dimensions['length'],
+          (int) $dimensions['height'],
+          (int) $weight['number'],
           FALSE
         ),
         $item['quantity']
