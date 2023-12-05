@@ -125,7 +125,7 @@ class Packer implements PackerInterface {
       try {
         $boxPacker->addBox(
           new PackerBox(
-            $package_type->id(),
+            $package_type->label() . ' (' . $package_type->id() . ')',
             (int) $dimensions['length'],
             (int) $dimensions['width'],
             (int) $dimensions['height'],
@@ -169,7 +169,7 @@ class Packer implements PackerInterface {
       try {
         $boxPacker->addItem(
           new PackerItem(
-            $item['order_item']->id(),
+            $item['order_item']->label() . ' (' . $item['order_item']->id() . ')',
             (int) $dimensions['width'],
             (int) $dimensions['length'],
             (int) $dimensions['height'],
@@ -197,7 +197,7 @@ class Packer implements PackerInterface {
     foreach ($packedBoxes as $i => $box) {
       $box_items = [];
       foreach ($box->getItems() as $packedItem) {
-        $order_item_id = $packedItem->getItem()->getDescription();
+        $order_item_id = (int) $this->getIdFromDescription($packedItem->getItem()->getDescription());
         $box_items[$order_item_id][] = [
           'title' => 'Shipment item',
           'quantity' => 1,
@@ -223,7 +223,7 @@ class Packer implements PackerInterface {
 
       $package_type_machine_name = $box->getBox()->getReference();
       /** @var \Drupal\commerce_shipping\Entity\PackageTypeInterface $package_type */
-      $package_type = $package_type_storage->load($package_type_machine_name);
+      $package_type = $package_type_storage->load($this->getIdFromDescription($package_type_machine_name));
       /** @var \Drupal\commerce_shipping\ProposedShipment[] $proposed_shipments */
       $proposed_shipments[] = new ProposedShipment([
         'type' => $this->getShipmentType($order),
@@ -274,6 +274,24 @@ class Packer implements PackerInterface {
     $order_type = $order_type_storage->load($order->bundle());
 
     return $order_type->getThirdPartySetting('commerce_shipping', 'shipment_type');
+  }
+
+  /**
+   * Extracts an ID from a description string.
+   *
+   * @param string $description
+   *   The description string to get the ID from.
+   *
+   * @return string
+   *   The ID.
+   */
+  protected function getIdFromDescription(string $description): string {
+    $close_position = strrpos($description, ')', -1);
+    if ($close_position !== FALSE && $close_position == strlen($description) - 1) {
+      $open_position = strrpos($description, '(') + 1;
+      $description = substr($description, $open_position, $close_position - $open_position);
+    }
+    return $description;
   }
 
   /**
