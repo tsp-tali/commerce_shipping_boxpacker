@@ -16,6 +16,7 @@ use Drupal\physical\Calculator;
 use Drupal\physical\Weight;
 use Drupal\physical\WeightUnit;
 use Drupal\profile\Entity\ProfileInterface;
+use Exception;
 
 class Packer implements PackerInterface {
 
@@ -121,19 +122,24 @@ class Packer implements PackerInterface {
       $this->convertWeightToGrams($package_weight);
       $this->convertWeightToGrams($max_weight);
 
-      $boxPacker->addBox(
-        new PackerBox(
-          $package_type->id(),
-          (int) $dimensions['length'],
-          (int) $dimensions['width'],
-          (int) $dimensions['height'],
-          (int) $package_weight['number'],
-          (int) $dimensions['length'],
-          (int) $dimensions['width'],
-          (int) $dimensions['height'],
-          (int) $max_weight['number']
-        )
-      );
+      try {
+        $boxPacker->addBox(
+          new PackerBox(
+            $package_type->id(),
+            (int) $dimensions['length'],
+            (int) $dimensions['width'],
+            (int) $dimensions['height'],
+            (int) $package_weight['number'],
+            (int) $dimensions['length'],
+            (int) $dimensions['width'],
+            (int) $dimensions['height'],
+            (int) $max_weight['number']
+          )
+        );
+      }
+      catch (\Exception $exception) {
+        watchdog_exception('boxpacker', $exception);
+      }
     }
 
     foreach ($items as $item) {
@@ -160,21 +166,31 @@ class Packer implements PackerInterface {
       // Convert weights to grams, so there are no errors in processing.
       $this->convertWeightToGrams($weight);
 
-      $boxPacker->addItem(
-        new PackerItem(
-          $item['order_item']->id(),
-          (int) $dimensions['width'],
-          (int) $dimensions['length'],
-          (int) $dimensions['height'],
-          (int) $weight['number'],
-          FALSE
-        ),
-        $item['quantity']
-      );
+      try {
+        $boxPacker->addItem(
+          new PackerItem(
+            $item['order_item']->id(),
+            (int) $dimensions['width'],
+            (int) $dimensions['length'],
+            (int) $dimensions['height'],
+            (int) $weight['number'],
+            FALSE
+          ),
+          $item['quantity']
+        );
+      }
+      catch (Exception $exception) {
+        watchdog_exception('boxpacker', $exception);
+      }
     }
 
-    /** @var \DVDoug\BoxPacker\PackedBoxList $packedBoxes */
-    $packedBoxes = $boxPacker->pack();
+    try {
+      /** @var \DVDoug\BoxPacker\PackedBoxList $packedBoxes */
+      $packedBoxes = $boxPacker->pack();
+    }
+    catch (Exception $exception) {
+      watchdog_exception('boxpacker', $exception);
+    }
 
     /** @var \Drupal\commerce_shipping\ProposedShipment[] $proposed_shipments */
     $proposed_shipments = [];
