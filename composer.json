@@ -1,5 +1,5 @@
 {
-    "name": "drupal/commerce_shipping_boxpacker",
+    "name": "tsp-tali/commerce_shipping_boxpacker",
     "description": "Commerce Shipping BoxPacker",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
